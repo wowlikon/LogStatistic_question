@@ -1,5 +1,6 @@
 from tabulate import tabulate
 import pandas as pd
+import numpy as np
 import statistics
 import sys
 
@@ -63,6 +64,11 @@ def filter_field(data: list, field: str, value) -> list:
             result.append(elem)
     return result
 
+def quantile(data: list, q: float) -> int:
+    data.sort()
+    arr = np.array(data)
+    return np.percentile(arr, q*100)
+
 #Преодбразование в DataFrame
 #df = pd.DataFrame.from_records(data)
 #print(df)
@@ -72,14 +78,14 @@ events = set(get_column(data, "EVENT"))
 for event in events:
     group = filter_field(data, "EVENT", event)
     value = get_column(group, "AVGTSMR")
-    print(f"{event} min={min(value)} max={max(value)} 50%={statistics.median(value)} 90%={value.quantile(0.9)} 99%={value.quantile(0.99)} 99.9%={value.quantile(0.999)}")
+    print(f"{event} min={min(value)} max={max(value)} 50%={statistics.median(value)} 90%={quantile(value, 0.9)} 99%={quantile(value, 0.99)} 99.9%={quantile(value, 0.999)}")
 
 #Создание таблицы
 table = []
 for i in range(110, 151, 5):
     count = count_in_range(data, 'AVGTSMR', i, i+5)
     less = count_less(data, 'AVGTSMR', i)
-    table.append([i, count, count/len(df)*100, less/len(df)*100])
+    table.append([i, count, count/len(data)*100, less/len(data)*100])
 
 print(tabulate(table, headers=["ExecTime", "TransNo", "Weight,%", "Percent"], tablefmt='double_outline'))
 
