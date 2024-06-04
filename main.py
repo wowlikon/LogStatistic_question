@@ -65,9 +65,17 @@ def filter_field(data: list, field: str, value) -> list:
     return result
 
 def quantile(data: list, q: float) -> int:
-    data.sort()
-    arr = np.array(data)
-    return np.percentile(arr, q*100)
+    arr = sorted(data)
+    n = len(arr)
+    index = int(q * (n - 1))
+    if q == 0:
+        return arr[0]
+    elif q == 1:
+        return arr[-1]
+    elif index == n - 1:
+        return arr[index]
+    else:
+        return (arr[index] + arr[index + 1]) / 2
 
 #Преодбразование в DataFrame
 #df = pd.DataFrame.from_records(data)
