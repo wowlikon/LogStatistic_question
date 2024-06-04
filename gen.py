@@ -1,13 +1,15 @@
 import datetime, random, sys
 
+#Генерация AVGTSMR c разными вероятностами
 def f():
     v = 100
-    i = True
-    while i:
-        i = (random.randint(0, 100) > 10)
+    while True:
         v += random.randint(1, 5)
+        if (random.randint(0, 100) < 10): break
     return v
 
+#Функции для разных параметров генерации для разных полей
+# (кол-во, функция)
 val = [
     (1, lambda: random.randint(200, 600)),
     (1, lambda: random.randint(5, 100)),
@@ -22,6 +24,7 @@ events = [
     "OTHER"
 ]
 
+#Создание файла на запись
 with open(sys.argv[1], "w+", encoding="utf-8") as f:
     f.write(f"[{datetime.datetime.now().strftime('%d-%m-%y %H:%M:%S.%f')}] Statistic gathering started\n")
     f.write("TIME	EVENT	CALLCNT	FILLCNT	AVGSIZE	MAXSIZE	AVGFULL	MAXFULL	AVGDLL	MAXDLL	AVGTRIP	MAXTRIP	AVGTEAP	MAXTEAP	AVGTSMR	MAXTSMR	MINTSMR\n")
